@@ -17,10 +17,10 @@
     "lint:hbs": "ember-template-lint .",
     "lint:js": "eslint .",
     "lint": "npm run lint:hbs && npm run lint:js",
-    "start": "ember serve",
-    "pretest": " ember backstop-remote& ",
-    "test": "export COVERAGE=true; ember test --test-port 0",
-    "posttest": "ember backstop-stop",
+    "start": "ember serve & echo $! >> app-id.pid & if [[ BACKSTOP==true ]]; then bash backstop-docker.sh; fi;",
+    "poststart": "kill $(cat app-id.pid) && rm app-id.pid",
+    "test": "export COVERAGE=true; ember test --test-port 0 & echo $! >> app-id.pid & if [[ BACKSTOP==true ]]; then bash backstop-docker.sh; fi;",
+    "posttest": "kill $(cat app-id.pid) && rm app-id.pid",
     "deploy-demo-app": "export BUILD_NAVI_DEMO=true; ember github-pages:commit --message 'update gh-pages' --destination ../../; echo 'gh-pages updated, now run:\ngit push origin gh-pages:gh-pages'"
   },
   "dependencies": {
